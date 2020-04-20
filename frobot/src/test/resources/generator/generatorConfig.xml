@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <context id="context1">
+        <!-- 数据Model属性对应Column获取插件 -->
+        <plugin type="com.itfsw.mybatis.generator.plugins.ModelColumnPlugin" />
+
+
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection
+                connectionURL="jdbc:mysql://192.168.0.218:3306/fcoupon?characterEncoding=UTF8"
+                driverClass="com.mysql.jdbc.Driver" password="XJS@#2018" userId="root"/>
+
+
+        <javaModelGenerator targetPackage="f.s.frobot.sql.column"
+                            targetProject="src/main/java"/>
+      <!-- <sqlMapGenerator
+                targetPackage="f.s.fcoupon.dao" targetProject="src/test/java"/>
+        <javaClientGenerator
+                targetPackage="f.s.fcoupon.dao" targetProject="src/test/java"
+                type="XMLMAPPER"/>-->
+
+        <!--<table schema="fcoupon" delimitIdentifiers="true" tableName="certificate" enableDeleteByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+        </table>-->
+        <table schema="fcoupon" delimitIdentifiers="true" tableName="certificate_type" enableDeleteByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table schema="fcoupon" delimitIdentifiers="true" tableName="course" enableDeleteByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table schema="fcoupon" delimitIdentifiers="true" tableName="course_order" enableDeleteByExample="false">
+             <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table schema="fcoupon" delimitIdentifiers="true" tableName="learn" enableDeleteByExample="false">
+             <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table schema="fcoupon" delimitIdentifiers="true" tableName="lesson" enableDeleteByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+
+    </context>
+</generatorConfiguration>

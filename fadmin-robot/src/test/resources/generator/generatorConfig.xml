@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <context id="context1">
+        <!-- 查询单条数据插件 -->
+        <plugin type="com.itfsw.mybatis.generator.plugins.SelectOneByExamplePlugin" />
+        <!-- 数据Model链式构建插件 -->
+        <plugin type="com.itfsw.mybatis.generator.plugins.ModelBuilderPlugin" />
+        <!-- Example Criteria 增强插件 -->
+        <plugin type="com.itfsw.mybatis.generator.plugins.ExampleEnhancedPlugin" />
+        <!-- MySQL分页插件 -->
+        <plugin type="com.itfsw.mybatis.generator.plugins.LimitPlugin" />
+        <!-- 批量插入插件 -->
+        <plugin type="com.itfsw.mybatis.generator.plugins.BatchInsertPlugin" />
+        <!-- 数据Model属性对应Column获取插件 -->
+        <plugin type="com.itfsw.mybatis.generator.plugins.ModelColumnPlugin" />
+        <!-- 增量插件 -->
+        <plugin type="com.itfsw.mybatis.generator.plugins.IncrementsPlugin" />
+        <!-- 查询结果选择性返回插件 -->
+        <plugin type="com.itfsw.mybatis.generator.plugins.SelectSelectivePlugin" />
+        <!-- Selective选择插入更新增强插件 -->
+        <plugin type="com.itfsw.mybatis.generator.plugins.SelectiveEnhancedPlugin" />
+
+        <!--去掉注释 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection
+                connectionURL="jdbc:mysql://127.0.0.1:3306/robot?characterEncoding=UTF8"
+                driverClass="com.mysql.jdbc.Driver" password="woaini123" userId="root"/>
+
+
+        <javaModelGenerator targetPackage="f.s.frobot.model"
+                            targetProject="src/main/java"/>
+        <sqlMapGenerator
+                targetPackage="f.s.frobot.dao" targetProject="src/main/java"/>
+        <javaClientGenerator
+                targetPackage="f.s.frobot.dao" targetProject="src/main/java"
+                type="XMLMAPPER"/>
+        <!-- <sqlMapGenerator
+                targetPackage="f.s.fcoupon.dao" targetProject="src/test/java"/>
+        <javaClientGenerator
+                targetPackage="f.s.fcoupon.dao" targetProject="src/test/java"
+                type="XMLMAPPER"/>-->
+
+        <!--<table schema="fcoupon" delimitIdentifiers="true" tableName="certificate" enableDeleteByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+        </table>-->
+        <!--<table schema="robot" delimitIdentifiers="true" tableName="call_instance" enableDeleteByExample="false">-->
+            <!--<property name="useActualColumnNames" value="false"/>-->
+        <!--</table>-->
+        <table schema="robot" delimitIdentifiers="true" tableName="call_task" enableDeleteByExample="false">
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+
+
+    </context>
+</generatorConfiguration>

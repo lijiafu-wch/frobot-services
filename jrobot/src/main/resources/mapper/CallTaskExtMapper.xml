@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="f.s.frobot.dao.CallTaskExtMapper">
+
+  <!-- 获取任务执行列表 -->
+  <select id="getExcuteList" resultMap="f.s.frobot.dao.CallTaskMapper.BaseResultMap">
+    select
+    <include refid="f.s.frobot.dao.CallTaskMapper.Base_Column_List" />
+    from call_task
+    where status =0 and excute_time &lt; NOW() and TO_DAYS(excute_time) = TO_DAYS(NOW()) order by excute_time asc
+  </select>
+
+
+  <!-- 获取没有小蜜返回结果的任务列表 -->
+  <select id="getCurrentExcuteList" resultMap="f.s.frobot.dao.CallTaskMapper.BaseResultMap">
+    select
+    <include refid="f.s.frobot.dao.CallTaskMapper.Base_Column_List" />
+    from call_task
+    where status =1 and call_instance_id = #{callInstanceId}  and  TO_DAYS(excute_time) = TO_DAYS(NOW())
+    order by excute_time asc
+  </select>
+
+  <update id="updateStatus">
+    update call_task
+    set status = #{status},utime = NOW()
+    where id in
+    <foreach collection="ids" separator="," close=")" open="(" item="id">
+      #{id}
+    </foreach>
+  </update>
+
+</mapper>
