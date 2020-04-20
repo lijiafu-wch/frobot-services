@@ -79,7 +79,7 @@ public class KyTest {
             RSA operaRsa = new RSA(null,publicKey);
             String hotelCode = "KYHAZH";//正式
             //String hotelCode = "KYGYBSD";//测试
-            String tradeNo = "4996454";
+            String tradeNo = "5009579";
             String remark = "不确定";
             String encrypt = HexUtil.encodeHexStr(operaRsa.encrypt("{\"hotelCode\":\""+hotelCode+"\",\"tradeNo\":\""+tradeNo+"\",\"remark\":\""+remark+"\"}",KeyType.PublicKey));
             System.out.println("加密字符串="+encrypt);

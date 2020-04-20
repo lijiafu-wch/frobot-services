@@ -61,10 +61,11 @@ public class KyRequest {
      */
     public List<KyBackOrder>  backOrder(){
         try {
-            String url ="http://test3.shands.cn/lvYun/checkOrderMessage.htm";
+            String url ="http://ets.shands.cn/lvYun/checkOrderMessage.htm";
             String publicKey="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFcGE6G/+ejaiXRyNdw35SA16JP7Tl4YZW65chrOr3zna/Wlsj5+5EySXRC/w1Z5rnHzoxMupKsI4NqA+28GgHoZ4lG679cEkqDI5kPd3pDLnS4q+ZqboCDNv1UyYnTKaCrYiGssyXpl2kA9z9fRzM0pPrjdIncEMdjHzHGUKVVwIDAQAB";
+            String hotelCode = "KYHAZH";//正式
             RSA operaRsa = new RSA(null,publicKey);
-            String encrypt = HexUtil.encodeHexStr(operaRsa.encrypt("{\"hotelCode\":\""+"KYGYBSD"+"\"}", KeyType.PublicKey));
+            String encrypt = HexUtil.encodeHexStr(operaRsa.encrypt("{\"hotelCode\":\""+hotelCode+"\"}", KeyType.PublicKey));
             Map<String, String> map = new HashMap<>();
             map.put("encrypt",encrypt);
             url = url+"?encrypt="+encrypt;
@@ -101,6 +102,7 @@ public class KyRequest {
         try {
             String url ="http://test3.shands.cn/lvYun/morningCall.htm";
             String publicKey="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFcGE6G/+ejaiXRyNdw35SA16JP7Tl4YZW65chrOr3zna/Wlsj5+5EySXRC/w1Z5rnHzoxMupKsI4NqA+28GgHoZ4lG679cEkqDI5kPd3pDLnS4q+ZqboCDNv1UyYnTKaCrYiGssyXpl2kA9z9fRzM0pPrjdIncEMdjHzHGUKVVwIDAQAB";
+            String hotelCode = "KYHAZH";//正式
             RSA operaRsa = new RSA(null,publicKey);
             String encrypt = HexUtil.encodeHexStr(operaRsa.encrypt("{\"hotelCode\":\""+"KYGYBSD"+"\"}", KeyType.PublicKey));
             Map<String, String> map = new HashMap<>();
@@ -135,10 +137,10 @@ public class KyRequest {
      * @date 2020/4/1 22:28
      */
     public String kyNotify(String traderNo,String result) throws  Exception{
-            String url ="http://test3.shands.cn/lvYun/appendRemarks.htm";//确认结果
+            String url ="http://ets.shands.cn/lvYun/appendRemarks.htm";//确认结果
             String publicKey="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFcGE6G/+ejaiXRyNdw35SA16JP7Tl4YZW65chrOr3zna/Wlsj5+5EySXRC/w1Z5rnHzoxMupKsI4NqA+28GgHoZ4lG679cEkqDI5kPd3pDLnS4q+ZqboCDNv1UyYnTKaCrYiGssyXpl2kA9z9fRzM0pPrjdIncEMdjHzHGUKVVwIDAQAB";
             RSA operaRsa = new RSA(null,publicKey);
-            String hotelCode = "KYGYBSD";
+            String hotelCode = "KYHAZH";
             String tradeNo = traderNo;
             String remark = result;
 
