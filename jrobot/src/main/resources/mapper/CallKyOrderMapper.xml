@@ -12,6 +12,7 @@
     <result column="morning_call_time" jdbcType="TIMESTAMP" property="morningCallTime" />
     <result column="arr" jdbcType="TIMESTAMP" property="arr" />
     <result column="dep" jdbcType="TIMESTAMP" property="dep" />
+    <result column="ctime" jdbcType="TIMESTAMP" property="ctime" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -73,7 +74,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, member_no, mobile, name, rmno, order_id, member_type, morning_call_time, arr, 
-    dep
+    dep, ctime
   </sql>
   <select id="selectByExample" parameterType="f.s.frobot.model.CallKyOrderExample" resultMap="BaseResultMap">
     select
@@ -81,7 +82,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from call_ky_order
+    from "call_ky_order"
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -110,7 +111,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from call_ky_order
+    from "call_ky_order"
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -121,7 +122,7 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from call_ky_order
+    from "call_ky_order"
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
@@ -134,25 +135,25 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from call_ky_order
+    from "call_ky_order"
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from call_ky_order
+    delete from "call_ky_order"
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="f.s.frobot.model.CallKyOrder">
-    insert into call_ky_order (id, member_no, mobile, 
+    insert into "call_ky_order" (id, member_no, mobile, 
       name, rmno, order_id, 
       member_type, morning_call_time, arr, 
-      dep)
+      dep, ctime)
     values (#{id,jdbcType=INTEGER}, #{memberNo,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
       #{name,jdbcType=VARCHAR}, #{rmno,jdbcType=VARCHAR}, #{orderId,jdbcType=INTEGER}, 
       #{memberType,jdbcType=VARCHAR}, #{morningCallTime,jdbcType=TIMESTAMP}, #{arr,jdbcType=TIMESTAMP}, 
-      #{dep,jdbcType=TIMESTAMP})
+      #{dep,jdbcType=TIMESTAMP}, #{ctime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="f.s.frobot.model.CallKyOrder">
-    insert into call_ky_order
+    insert into "call_ky_order"
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <choose>
         <when test="_parameter.hasSelective()">
@@ -186,6 +187,9 @@
           <if test="_parameter.hasSelective('dep')">
             dep,
           </if>
+          <if test="_parameter.hasSelective('ctime')">
+            ctime,
+          </if>
         </when>
         <otherwise>
           <if test="id != null">
@@ -217,6 +221,9 @@
           </if>
           <if test="dep != null">
             dep,
+          </if>
+          <if test="ctime != null">
+            ctime,
           </if>
         </otherwise>
       </choose>
@@ -254,6 +261,9 @@
           <if test="_parameter.hasSelective('dep')">
             #{dep,jdbcType=TIMESTAMP},
           </if>
+          <if test="_parameter.hasSelective('ctime')">
+            #{ctime,jdbcType=TIMESTAMP},
+          </if>
         </when>
         <otherwise>
           <if test="id != null">
@@ -286,18 +296,21 @@
           <if test="dep != null">
             #{dep,jdbcType=TIMESTAMP},
           </if>
+          <if test="ctime != null">
+            #{ctime,jdbcType=TIMESTAMP},
+          </if>
         </otherwise>
       </choose>
     </trim>
   </insert>
   <select id="countByExample" parameterType="f.s.frobot.model.CallKyOrderExample" resultType="java.lang.Long">
-    select count(*) from call_ky_order
+    select count(*) from "call_ky_order"
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update call_ky_order
+    update "call_ky_order"
     <set>
       <choose>
         <when test="record.hasSelective()">
@@ -331,6 +344,9 @@
           <if test="record.hasSelective('dep')">
             dep = #{record.dep,jdbcType=TIMESTAMP},
           </if>
+          <if test="record.hasSelective('ctime')">
+            ctime = #{record.ctime,jdbcType=TIMESTAMP},
+          </if>
         </when>
         <otherwise>
           <if test="record.id != null">
@@ -363,6 +379,9 @@
           <if test="record.dep != null">
             dep = #{record.dep,jdbcType=TIMESTAMP},
           </if>
+          <if test="record.ctime != null">
+            ctime = #{record.ctime,jdbcType=TIMESTAMP},
+          </if>
         </otherwise>
       </choose>
     </set>
@@ -371,7 +390,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update call_ky_order
+    update "call_ky_order"
     set id = #{record.id,jdbcType=INTEGER},
       member_no = #{record.memberNo,jdbcType=VARCHAR},
       mobile = #{record.mobile,jdbcType=VARCHAR},
@@ -381,13 +400,14 @@
       member_type = #{record.memberType,jdbcType=VARCHAR},
       morning_call_time = #{record.morningCallTime,jdbcType=TIMESTAMP},
       arr = #{record.arr,jdbcType=TIMESTAMP},
-      dep = #{record.dep,jdbcType=TIMESTAMP}
+      dep = #{record.dep,jdbcType=TIMESTAMP},
+      ctime = #{record.ctime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="f.s.frobot.model.CallKyOrder">
-    update call_ky_order
+    update "call_ky_order"
     <set>
       <choose>
         <when test="_parameter.hasSelective()">
@@ -418,6 +438,9 @@
           <if test="_parameter.hasSelective('dep')">
             dep = #{dep,jdbcType=TIMESTAMP},
           </if>
+          <if test="_parameter.hasSelective('ctime')">
+            ctime = #{ctime,jdbcType=TIMESTAMP},
+          </if>
         </when>
         <otherwise>
           <if test="memberNo != null">
@@ -447,13 +470,16 @@
           <if test="dep != null">
             dep = #{dep,jdbcType=TIMESTAMP},
           </if>
+          <if test="ctime != null">
+            ctime = #{ctime,jdbcType=TIMESTAMP},
+          </if>
         </otherwise>
       </choose>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="f.s.frobot.model.CallKyOrder">
-    update call_ky_order
+    update "call_ky_order"
     set member_no = #{memberNo,jdbcType=VARCHAR},
       mobile = #{mobile,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
@@ -462,7 +488,8 @@
       member_type = #{memberType,jdbcType=VARCHAR},
       morning_call_time = #{morningCallTime,jdbcType=TIMESTAMP},
       arr = #{arr,jdbcType=TIMESTAMP},
-      dep = #{dep,jdbcType=TIMESTAMP}
+      dep = #{dep,jdbcType=TIMESTAMP},
+      ctime = #{ctime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectOneByExample" parameterType="f.s.frobot.model.CallKyOrderExample" resultMap="BaseResultMap">
@@ -473,7 +500,7 @@
     -->
     select
     <include refid="Base_Column_List" />
-    from call_ky_order
+    from "call_ky_order"
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -492,7 +519,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from call_ky_order
+    from "call_ky_order"
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -507,15 +534,16 @@
       This element is automatically generated by MyBatis Generator, do not modify.
       @project https://github.com/itfsw/mybatis-generator-plugin
     -->
-    insert into call_ky_order
+    insert into "call_ky_order"
     (id, member_no, mobile, name, rmno, order_id, member_type, morning_call_time, arr, 
-      dep)
+      dep, ctime)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=INTEGER}, #{item.memberNo,jdbcType=VARCHAR}, #{item.mobile,jdbcType=VARCHAR}, 
         #{item.name,jdbcType=VARCHAR}, #{item.rmno,jdbcType=VARCHAR}, #{item.orderId,jdbcType=INTEGER}, 
         #{item.memberType,jdbcType=VARCHAR}, #{item.morningCallTime,jdbcType=TIMESTAMP}, 
-        #{item.arr,jdbcType=TIMESTAMP}, #{item.dep,jdbcType=TIMESTAMP})
+        #{item.arr,jdbcType=TIMESTAMP}, #{item.dep,jdbcType=TIMESTAMP}, #{item.ctime,jdbcType=TIMESTAMP}
+        )
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -524,7 +552,7 @@
       This element is automatically generated by MyBatis Generator, do not modify.
       @project https://github.com/itfsw/mybatis-generator-plugin
     -->
-    insert into call_ky_order (
+    insert into "call_ky_order" (
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
@@ -562,6 +590,9 @@
         </if>
         <if test="'dep' == column.value">
           #{item.dep,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'ctime' == column.value">
+          #{item.ctime,jdbcType=TIMESTAMP}
         </if>
       </foreach>
       )

@@ -11,6 +11,7 @@ import f.s.frobot.util.GsonUtil;
 import f.s.utils.DateUtil;
 import f.s.utils.StringUtils;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +81,10 @@ public class KyRequest {
                 depDateStr = DateUtil.getDay(DateUtil.parseDay(depDateStr));
                 String nowDateStr = DateUtil.getDay();
                 if(depDateStr.equals(nowDateStr)){
+                    //如果没有会员信息，会员类型为A
+                    if(StringUtils.isBlank(kyBackOrder.getMemberType())){
+                        kyBackOrder.setMemberType("A");
+                    }
                     orderList.add(kyBackOrder);
                 }
             }
@@ -182,6 +187,7 @@ public class KyRequest {
             order.setName(backOrder.getName());
             order.setOrderId(backOrder.getId());
             order.setRmno(backOrder.getRmno());
+            order.setCtime(new Date());
             orderList.add(order);
         }
         callKyOrderService.batchAdd(orderList);
