@@ -66,9 +66,9 @@ public class SmartCallJob {
     @Scheduled(cron = "0 0 12 * * ?")//中午12点执行
     //@Scheduled(cron = "0 12 21 * * ?")//中午12点执行
     public void backTask() {
-        log.info("定时获取开元崔退订单-------------start-----");
         // 调用开元接口
         List<KyBackOrder> orderList = kyRequest.backOrder();
+        log.info("定时获取开元崔退订单-------------start-----，数量 :",orderList.size());
         for(KyBackOrder kyBackOrder : orderList){
             CallTask callTask = callTaskService.getTaskByRequestId(kyBackOrder.getId() + "");
             if(null == callTask){

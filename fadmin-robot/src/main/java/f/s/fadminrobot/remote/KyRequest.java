@@ -19,6 +19,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.reflect.TypeToken;
@@ -61,6 +62,7 @@ public class KyRequest {
      * @date 2020/4/1 22:28
      */
     public List<KyBackOrder>    backOrder(){
+        List<KyBackOrder> orderList = new ArrayList<>();
         try {
             String url ="http://ets.shands.cn/lvYun/checkOrderMessage.htm";
             String publicKey="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFcGE6G/+ejaiXRyNdw35SA16JP7Tl4YZW65chrOr3zna/Wlsj5+5EySXRC/w1Z5rnHzoxMupKsI4NqA+28GgHoZ4lG679cEkqDI5kPd3pDLnS4q+ZqboCDNv1UyYnTKaCrYiGssyXpl2kA9z9fRzM0pPrjdIncEMdjHzHGUKVVwIDAQAB";
@@ -75,7 +77,6 @@ public class KyRequest {
             KyResponse kyResponse = GsonUtil.getGsonInstance().fromJson(body,KyResponse.class);
             log.info("ky json : {}",kyResponse.getMessage());
             List<KyBackOrder> kyBackOrders = GsonUtil.getGsonInstance().fromJson(kyResponse.getMessage(), new TypeToken<List<KyBackOrder>>() {}.getType());
-            List<KyBackOrder> orderList = new ArrayList<>();
             for(KyBackOrder kyBackOrder : kyBackOrders){
                 //判断离店时间是否为今天
                 String depDateStr = kyBackOrder.getDep();
@@ -90,12 +91,13 @@ public class KyRequest {
                 }
             }
             //保存开元数据
-            saveKyOrder(orderList);
-            return orderList;
+            if(!CollectionUtils.isEmpty(orderList)){
+                saveKyOrder(orderList);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("开元崔退订单保存异常：{}",e.getMessage());
         }
-        return null;
+        return orderList;
     }
 
 
