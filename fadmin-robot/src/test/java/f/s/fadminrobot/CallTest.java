@@ -99,8 +99,8 @@ public class CallTest {
         CreateJobGroupRequest request = new CreateJobGroupRequest();
         request.setRegionId("cn-shanghai");
         request.setInstanceId("216f3937-b928-47c5-9dac-6d5e74f8fbbc");
-        request.setJobGroupName("开元崔退测试2");
-        request.setJobGroupDescription("开元崔退测试2");
+        request.setJobGroupName("正式任务组1");
+        request.setJobGroupDescription("正式任务组1");
         request.setScriptId("d1db100a-abfb-41fb-b60d-f06578f04117");
         //request.setStrategyJson("{\"maxAttemptsPerDay\":2,\"name\":\" 策略名字 \",\"workingTime\":[\"beginTime\":\"23:00:00\",\"endTime\":\"23:59:00\"}],\"minAttemptInterval\":60}");
         try {
