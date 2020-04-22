@@ -91,7 +91,7 @@ public class SmartCallJob {
                 }
             }
         }
-        log.info("定时获取开元崔退订单-------------end-----");
+        log.info("定时获取开元崔退订单-------------end-----,数量：{}",orderList.size());
     }
 
     /**
@@ -138,7 +138,7 @@ public class SmartCallJob {
         }
         //List 以instanceId分组 Map<String,List<CallTask>>
         Map<String, List<CallTask>> groupByTask = excuteList.stream().collect(Collectors.groupingBy(CallTask::getInstanceId));
-        log.info("excute task start ..................task map : {}",groupByTask.toString());
+        log.info("excute task start ..................task num : {}",groupByTask.size());
         //任务id集合
         Set<Integer> set = null;
         //遍历map集合
@@ -164,7 +164,7 @@ public class SmartCallJob {
             }
 
         }
-        log.info("excute task end ，ids: {}..................",set);
+        log.info("excute task end ，ids num : {}..................",set.size());
     }
 
 
