@@ -64,7 +64,7 @@ public class SmartCallJob {
      * @date 2020/3/30 23:18
      */
     @Scheduled(cron = "0 0 12 * * ?")//中午12点执行
-    //@Scheduled(cron = "0/20 * * * * ?")
+    //@Scheduled(cron = "0 12 21 * * ?")//中午12点执行
     public void backTask() {
         log.info("定时获取开元崔退订单-------------start-----");
         // 调用开元接口
@@ -132,13 +132,13 @@ public class SmartCallJob {
     //@Scheduled(cron = "0 */1 * * * ?")
     @Scheduled(fixedRate = 20000) //20秒执行一次
     private void excuteTask() {
-        log.info("excute task start ..................");
         List<CallTask> excuteList = callTaskService.getExcuteList();
         if(CollectionUtils.isEmpty(excuteList)){
             return ;
         }
         //List 以instanceId分组 Map<String,List<CallTask>>
         Map<String, List<CallTask>> groupByTask = excuteList.stream().collect(Collectors.groupingBy(CallTask::getInstanceId));
+        log.info("excute task start ..................task map : {}",groupByTask.toString());
         //任务id集合
         Set<Integer> set = null;
         //遍历map集合

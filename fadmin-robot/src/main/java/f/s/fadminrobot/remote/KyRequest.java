@@ -73,6 +73,7 @@ public class KyRequest {
             ResponseEntity<String> entity = restTemplate.getForEntity(url, String .class);
             String  body  =entity.getBody();
             KyResponse kyResponse = GsonUtil.getGsonInstance().fromJson(body,KyResponse.class);
+            log.info("ky json : {}",kyResponse.getMessage());
             List<KyBackOrder> kyBackOrders = GsonUtil.getGsonInstance().fromJson(kyResponse.getMessage(), new TypeToken<List<KyBackOrder>>() {}.getType());
             List<KyBackOrder> orderList = new ArrayList<>();
             for(KyBackOrder kyBackOrder : kyBackOrders){
