@@ -193,6 +193,8 @@ public class KyRequest {
             order.setCtime(new Date());
             orderList.add(order);
         }
-        callKyOrderService.batchAdd(orderList);
+        if(!CollectionUtils.isEmpty(orderList)){
+            callKyOrderService.batchAdd(orderList);
+        }
     }
 }
