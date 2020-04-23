@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 1.0
  */
 @RestController
-@RequestMapping("admin/robot/visitor/api/call")
+@RequestMapping("api/call/task")
 public class CallApiController {
 
     @Autowired
@@ -31,8 +31,8 @@ public class CallApiController {
      * @author lijiafu
      * @date 2020/2/18 16:30
      */
-    @PostMapping("/createTask")
-    public ResultModel createTask(@RequestHeader()Integer idNum, String encryptData) throws BaseError {
+    @PostMapping("/createTask1")
+    public ResultModel createTask1(@RequestHeader()Integer idNum, String encryptData) throws BaseError {
         //根据idNum找到对应的商户的密钥，对encryptData进行解密
         String priKey ="";
         CallTaskVo callTaskVo = null;
@@ -45,6 +45,18 @@ public class CallApiController {
         }
         callTaskVo.setMerchantId(idNum);
 
+        smartCallService.creatCallTask(callTaskVo);
+        return ResultModel.success();
+    }
+
+    /**
+     * 创建外呼任务
+     * @author lijiafu
+     * @date 2020/2/18 16:30
+     */
+    @PostMapping("/add")
+    public ResultModel createTask(String data) throws BaseError {
+        CallTaskVo callTaskVo =  GsonUtil.getGsonInstance().fromJson(data, CallTaskVo.class);
         smartCallService.creatCallTask(callTaskVo);
         return ResultModel.success();
     }
