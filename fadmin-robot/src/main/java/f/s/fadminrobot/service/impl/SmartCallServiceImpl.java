@@ -81,7 +81,7 @@ public class SmartCallServiceImpl implements SmartCallService {
 
         String notifyResult = null;//第三方返回结果
         //通知第三方 ，查询第三方配置 处理错误 和网络超时
-        if(StringUtils.isNotBlank(callTask.getRequestid())){
+        if(null != callTask && StringUtils.isNotBlank(callTask.getRequestid())){
             try {
                 notifyResult = kyRequest.kyNotify(callTask.getRequestid(), callTaskNotifyVo.getResult());
             } catch (Exception e) {
