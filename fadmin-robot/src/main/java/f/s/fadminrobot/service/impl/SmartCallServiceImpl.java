@@ -98,7 +98,7 @@ public class SmartCallServiceImpl implements SmartCallService {
         tempTask.setUtime(new Date());
         callTaskService.updateCallTask(tempTask);
         //验证是否需要进行其他通知
-        if(callTaskNotifyVo.isIfCall()){
+        if(null != callTask && callTaskNotifyVo.isIfCall()){
             //创建执行任务
             //根据外呼实例
             CallTaskVo callTaskVo = new CallTaskVo();

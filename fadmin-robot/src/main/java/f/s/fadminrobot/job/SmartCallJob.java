@@ -68,7 +68,7 @@ public class SmartCallJob {
     public void backTask() {
         // 调用开元接口
         List<KyBackOrder> orderList = kyRequest.backOrder();
-        log.info("定时获取开元崔退订单-------------start-----，数量 :",orderList.size());
+        log.info("定时获取开元崔退订单-------------start-----，数量 : {}",orderList.size());
         for(KyBackOrder kyBackOrder : orderList){
             CallTask callTask = callTaskService.getTaskByRequestId(kyBackOrder.getId() + "");
             if(null == callTask){
@@ -86,8 +86,9 @@ public class SmartCallJob {
                 callTaskVo.setExtParam(GsonUtil.getGsonInstance().toJson(map));
                 try {
                     smartCallService.creatCallTask(callTaskVo);
-                } catch (BaseError baseError) {
-                    baseError.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.error("add task error ,requestId : {}",kyBackOrder.getId());
                 }
             }
         }
