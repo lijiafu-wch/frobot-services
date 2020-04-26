@@ -1,6 +1,7 @@
 package f.s.fadminrobot.controller;
 
 import f.s.fadminrobot.error.FrobotErrors;
+import f.s.fadminrobot.job.KyCallJob;
 import f.s.fadminrobot.job.SmartCallJob;
 import f.s.fadminrobot.service.SmartCallService;
 import f.s.fadminrobot.vo.smartcall.CallTaskNotifyVo;
@@ -35,7 +36,7 @@ public class SmartCallController {
     @Autowired
     private SmartCallService smartCallService;
     @Autowired
-    private SmartCallJob smartCallJob;
+    private KyCallJob kyCallJob;
     @Autowired
     private FrobotErrors frobotErrors;
 
@@ -74,7 +75,7 @@ public class SmartCallController {
         if(!key.equals("ky")){
             int i = 1/0;
         }
-        smartCallJob.backTask();
+        kyCallJob.backTask();
         return ResultModel.success();
     }
 

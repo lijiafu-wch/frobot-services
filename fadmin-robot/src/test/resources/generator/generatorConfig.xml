@@ -51,7 +51,7 @@
         <!--<table schema="robot" delimitIdentifiers="true" tableName="call_instance" enableDeleteByExample="false">-->
             <!--<property name="useActualColumnNames" value="false"/>-->
         <!--</table>-->
-        <table schema="robot" delimitIdentifiers="true" tableName="call_ky_order" enableDeleteByExample="false">
+        <table schema="robot" delimitIdentifiers="true" tableName="call_instance" enableDeleteByExample="false">
             <property name="useActualColumnNames" value="false"/>
         </table>
 

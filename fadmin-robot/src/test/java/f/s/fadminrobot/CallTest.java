@@ -97,7 +97,7 @@ public class CallTest {
     @Test
     public void  createJobGroup() throws Exception {
         CreateJobGroupRequest request = new CreateJobGroupRequest();
-        request.setRegionId("cn-shanghai");
+        //request.setRegionId("cn-shanghai");
         request.setInstanceId("216f3937-b928-47c5-9dac-6d5e74f8fbbc");
         request.setJobGroupName("正式任务组1");
         request.setJobGroupDescription("正式任务组1");

@@ -14,6 +14,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.sound.midi.Soundbank;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -121,13 +123,18 @@ public class SmartCallServiceImpl implements SmartCallService {
         }
     }
 
-
     //组装CallTask
     private CallTask assCallTask(CallInstance callInstance,CallTaskVo callTaskVo){
         Date date = new Date();
         CallTask callTask = new CallTask();
         callTask.setCallingNum(callTaskVo.getCallingNum());//主叫号码
-        callTask.setPhoneNum(callTaskVo.getPhoneNum());//被叫手机号
+        //如果被叫号码前缀不为空，则加上前缀
+        if(null != callInstance.getCallNumPrefix()){
+            callTask.setPhoneNum(Integer.parseInt(callInstance.getCallNumPrefix()+""+callTaskVo.getPhoneNum()));//被叫手机号
+        }else{
+            callTask.setPhoneNum(callTaskVo.getPhoneNum());//被叫手机号
+        }
+
         callTask.setRoomNum(callTaskVo.getRootNum());//房间号
         callTask.setInstanceId(callTaskVo.getInstanceId());//外呼实例，崔退
         callTask.setGroupId(callTaskVo.getGroupId());//外呼执行组id

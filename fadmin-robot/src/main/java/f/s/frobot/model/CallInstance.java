@@ -161,8 +161,8 @@ public class CallInstance {
      * @mbg.generated
      * @project https://github.com/itfsw/mybatis-generator-plugin
      */
-    public static Builder builder() {
-        return new Builder();
+    public static CallInstance.Builder builder() {
+        return new CallInstance.Builder();
     }
 
     /**

@@ -1,6 +1,7 @@
 package f.s.fadminrobot.service;
 
 import f.s.frobot.model.CallInstance;
+import java.util.List;
 
 /**
  * 外呼实例service
@@ -16,4 +17,18 @@ public interface CallInstanceService {
      * @date 2020/4/2 17:40
      */
     CallInstance findById(Long id);
+
+    /**
+     * 修改实例
+     * @author lijiafu
+     * @date 2020/4/2 17:40
+     */
+    int update(CallInstance callInstance);
+
+    /**
+     * 查询所有有效的外呼实例
+     * @author lijiafu
+     * @date 2020/4/26 22:05
+     */
+    List<CallInstance> findListByStatus();
 }

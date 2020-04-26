@@ -63,6 +63,7 @@ public class KyRequest {
      */
     public List<KyBackOrder>    backOrder(){
         List<KyBackOrder> orderList = new ArrayList<>();
+        Map<String,KyBackOrder> kyBackOrderMap = new HashMap<>();
         try {
             String url ="http://ets.shands.cn/lvYun/checkOrderMessage.htm";
             String publicKey="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFcGE6G/+ejaiXRyNdw35SA16JP7Tl4YZW65chrOr3zna/Wlsj5+5EySXRC/w1Z5rnHzoxMupKsI4NqA+28GgHoZ4lG679cEkqDI5kPd3pDLnS4q+ZqboCDNv1UyYnTKaCrYiGssyXpl2kA9z9fRzM0pPrjdIncEMdjHzHGUKVVwIDAQAB";
@@ -87,11 +88,13 @@ public class KyRequest {
                     if(StringUtils.isBlank(kyBackOrder.getMemberType())){
                         kyBackOrder.setMemberType("A");
                     }
-                    orderList.add(kyBackOrder);
+                    //去除重复订单
+                    kyBackOrderMap.put(kyBackOrder.getRmno(),kyBackOrder);
                 }
             }
             //保存开元数据
-            if(!CollectionUtils.isEmpty(orderList)){
+            if(!CollectionUtils.isEmpty(kyBackOrderMap)){
+                orderList = new ArrayList(kyBackOrderMap.values());
                 saveKyOrder(orderList);
             }
         } catch (Exception e) {
@@ -130,7 +133,7 @@ public class KyRequest {
                 }
             }
 
-            //TODO 需要保存开元数据
+            //保存开元数据
             saveKyOrder(orderList);
             return orderList;
         } catch (Exception e) {
@@ -159,8 +162,8 @@ public class KyRequest {
             ResponseEntity<String> entity = restTemplate.getForEntity(url, String .class);
             String  body  =entity.getBody();
             if(StringUtils.isNotBlank(body)){
-                if(body.length() > 64){
-                    body = body.substring(1,64);
+                if(body.length() > 128){
+                    body = body.substring(1,128);
                 }
             }
             log.info("订单号：{},开元通知结果 {}",tradeNo,body);
@@ -173,7 +176,7 @@ public class KyRequest {
         CallKyOrder order = null;
         for(KyBackOrder backOrder : list){
 
-            //TODO 查询开元订单是否存在，如果已存在，则过滤
+            //查询开元订单是否存在，如果已存在，则过滤
             CallKyOrder callKyOrder = callKyOrderService.findByOrderId(backOrder.getId());
             if(null != callKyOrder){//不为空，代表开元订单已存在，需过滤掉
                 continue;
