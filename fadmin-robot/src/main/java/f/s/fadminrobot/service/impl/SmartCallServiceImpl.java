@@ -1,6 +1,6 @@
 package f.s.fadminrobot.service.impl;
 
-import f.s.fadminrobot.remote.KyRequest;
+import f.s.fadminrobot.third.KyRequest;
 import f.s.fadminrobot.service.CallInstanceService;
 import f.s.fadminrobot.service.CallTaskService;
 import f.s.fadminrobot.service.SmartCallService;
@@ -11,10 +11,6 @@ import f.s.frobot.model.CallTask;
 import f.s.jerror.BaseError;
 import f.s.utils.StringUtils;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.sound.midi.Soundbank;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

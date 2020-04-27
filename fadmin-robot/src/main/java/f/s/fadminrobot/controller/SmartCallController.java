@@ -36,8 +36,6 @@ public class SmartCallController {
     @Autowired
     private SmartCallService smartCallService;
     @Autowired
-    private KyCallJob kyCallJob;
-    @Autowired
     private FrobotErrors frobotErrors;
 
     /**
@@ -68,28 +66,5 @@ public class SmartCallController {
         }
         smartCallService.notify(callTaskNotifyVo);
         return ResultModel.success();
-    }
-
-    @GetMapping("/ky/order")
-    public ResultModel kyOrder(String key) throws BaseError {
-        if(!key.equals("ky")){
-            int i = 1/0;
-        }
-        kyCallJob.backTask();
-        return ResultModel.success();
-    }
-
-    /**
-     * test
-     * @author lijiafu
-     * @date 2020/2/18 16:30
-     */
-    @GetMapping("/test")
-    public ResultModel test(int param) throws BaseError {
-
-        System.out.println("线程执行2");
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("name","李红");
-        return ResultModel.success(hashMap);
     }
 }

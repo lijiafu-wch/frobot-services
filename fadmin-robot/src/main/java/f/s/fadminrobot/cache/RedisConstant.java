@@ -15,6 +15,10 @@ public class RedisConstant {
      * 开元酒店vip 会员名称
      */
     public static final String ROBOT_KY_VIP_NAME ="1robot:kyvipname";
+    /**
+     * 开元酒店vip 会员名称
+     */
+    public static final String THIRD_KY_HOTLE ="1third:kyjd:";
 
 
 }

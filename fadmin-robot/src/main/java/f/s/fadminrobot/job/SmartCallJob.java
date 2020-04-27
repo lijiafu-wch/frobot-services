@@ -1,11 +1,7 @@
 package f.s.fadminrobot.job;
 
-import f.s.fadminrobot.remote.KyRequest;
 import f.s.fadminrobot.service.CallInstanceService;
 import f.s.fadminrobot.service.CallTaskService;
-import f.s.fadminrobot.service.SmartCallService;
-import f.s.fadminrobot.vo.ext.KyBackOrder;
-import f.s.fadminrobot.vo.smartcall.CallTaskVo;
 import f.s.fadminrobot.vo.smartcall.Contact;
 import f.s.fadminrobot.vo.smartcall.Extra;
 import f.s.fadminrobot.vo.smartcall.JobsJson;
@@ -13,20 +9,16 @@ import f.s.frobot.model.CallInstance;
 import f.s.frobot.model.CallTask;
 import f.s.frobot.util.AliyunAcsClient;
 import f.s.frobot.util.GsonUtil;
-import f.s.jerror.BaseError;
 import f.s.utils.DateUtil;
 import f.s.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.sound.midi.Soundbank;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -38,9 +30,6 @@ import com.aliyuncs.outboundbot.model.v20191226.AssignJobsRequest;
 import com.aliyuncs.outboundbot.model.v20191226.AssignJobsResponse;
 import com.aliyuncs.outboundbot.model.v20191226.CreateJobGroupRequest;
 import com.aliyuncs.outboundbot.model.v20191226.CreateJobGroupResponse;
-import com.aliyuncs.outboundbot.model.v20191226.QueryJobsRequest;
-import com.aliyuncs.outboundbot.model.v20191226.QueryJobsResponse;
-import com.google.gson.Gson;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -67,7 +56,6 @@ public class SmartCallJob {
      * @author lijiafu
      * @date 2020/3/30 23:18
      */
-    //@Scheduled(cron = "0 */1 * * * ?")1分钟一次
     @Scheduled(fixedRate = 20000) //20秒执行一次
     private void excuteTask() {
         List<CallTask> excuteList = callTaskService.getExcuteList();
@@ -110,8 +98,8 @@ public class SmartCallJob {
      * @author lijiafu
      * @date 2020/4/26 21:57
      */
-    @Scheduled(cron = "1 0 0 * * ?")//每天凌晨24:00:01点执行
-    private void createJobGroup() {
+    @Scheduled(cron = "0 0 1 * * ?")//每天凌晨1点执行
+    public void createJobGroup() {
         //获取所有有效的外呼实例
         List<CallInstance> callInstanceList = callInstanceService.findListByStatus();
         String currentDate = DateUtil.getDay();

@@ -278,7 +278,6 @@ public class RobotInfoServiceImpl implements RobotInfoService {
 
     @Override
     public void bindBaseUser(Long id,int baseUserId,String baseUserName) throws BaseError {
-        RobotInfo robotInfo = robotInfoMapper.selectByPrimaryKey(id);
         RobotInfo tempRobotInfo = new RobotInfo();
         tempRobotInfo.setId(id);
         tempRobotInfo.setBaseUserId(baseUserId);

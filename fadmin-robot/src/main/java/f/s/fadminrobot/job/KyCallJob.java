@@ -1,28 +1,20 @@
 package f.s.fadminrobot.job;
 
-import f.s.fadminrobot.remote.KyRequest;
+import f.s.fadminrobot.service.CallThirdConfigService;
+import f.s.fadminrobot.third.KyRequest;
 import f.s.fadminrobot.service.CallTaskService;
 import f.s.fadminrobot.service.SmartCallService;
 import f.s.fadminrobot.vo.ext.KyBackOrder;
 import f.s.fadminrobot.vo.smartcall.CallTaskVo;
-import f.s.fadminrobot.vo.smartcall.Contact;
-import f.s.fadminrobot.vo.smartcall.Extra;
-import f.s.fadminrobot.vo.smartcall.JobsJson;
 import f.s.frobot.model.CallTask;
 import f.s.frobot.util.AliyunAcsClient;
 import f.s.frobot.util.GsonUtil;
 import f.s.jerror.BaseError;
 import f.s.utils.DateUtil;
-import f.s.utils.StringUtils;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -30,8 +22,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.outboundbot.model.v20191226.AssignJobsRequest;
-import com.aliyuncs.outboundbot.model.v20191226.AssignJobsResponse;
 import com.aliyuncs.outboundbot.model.v20191226.QueryJobsRequest;
 import com.aliyuncs.outboundbot.model.v20191226.QueryJobsResponse;
 
@@ -55,73 +45,52 @@ public class KyCallJob {
     private KyRequest kyRequest;
     @Autowired
     private SmartCallService smartCallService;
+    @Autowired
+    private CallThirdConfigService callThirdConfig;
     /**
      * 开元崔退任务
      * @author lijiafu
      * @date 2020/3/30 23:18
      */
     @Scheduled(cron = "0 0 12 * * ?")//中午12点执行
-    //@Scheduled(cron = "0 12 21 * * ?")//中午12点执行
     public void backTask() {
         // 调用开元接口
         List<KyBackOrder> orderList = kyRequest.backOrder();
         log.info("定时获取开元崔退订单-------------start-----，数量 : {}",orderList.size());
+        //商户id
+        Integer merchantId = 30;
+        //外呼实例id
+        String callTypeId = callThirdConfig.getValue(merchantId,"ky_request","callTypeId");
         for(KyBackOrder kyBackOrder : orderList){
             CallTask callTask = callTaskService.getTaskByRequestId(kyBackOrder.getId() + "");
             if(null == callTask){
-                //创建执行任务 TODO 商家id 和 外呼id
+                //会员类型
+                String memberType = callThirdConfig.getValue(merchantId,"ky_vipName",kyBackOrder.getMemberType());
+                //延退时间
+                String dlayTime = callThirdConfig.getValue(merchantId,"ky_vipTime",kyBackOrder.getMemberType());
+
+                //创建执行任务
                 CallTaskVo callTaskVo = new CallTaskVo();
-                callTaskVo.setMerchantId(30);//商家id
-                callTaskVo.setCallTypeId(1001l);//外呼实例id
+                callTaskVo.setMerchantId(merchantId);//商家id
+                callTaskVo.setCallTypeId(Long.parseLong(callTypeId));//外呼实例id
                 callTaskVo.setPhoneNum(Integer.parseInt(kyBackOrder.getRmno()));//被叫号码
                 callTaskVo.setRequestId(kyBackOrder.getId()+"");//请求id
                 callTaskVo.setRootNum(kyBackOrder.getRmno());//房间号
                 Map<String,String> map  = new HashMap<>();
-                map.put("memberType",KyRequest.vipNameMap.get(kyBackOrder.getMemberType()));
-                map.put("dlayTime",KyRequest.vipTimeMap.get(kyBackOrder.getMemberType()));
+                map.put("memberType",memberType);
+                map.put("dlayTime",dlayTime);
                 map.put("roomPhone",kyBackOrder.getRmno());
                 callTaskVo.setExtParam(GsonUtil.getGsonInstance().toJson(map));
                 try {
                     smartCallService.creatCallTask(callTaskVo);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    log.error("add task error ,requestId : {}",kyBackOrder.getId());
+                    log.error("add task error ,requestId : {},error : {}",kyBackOrder.getId(),e.getMessage());
                 }
             }
         }
         log.info("定时获取开元崔退订单-------------end-----,数量：{}",orderList.size());
     }
-
-    /**
-     * 开元叫早任务
-     * @author lijiafu
-     * @date 2020/3/30 23:18
-     */
-    //@Scheduled(cron = "0/20 * * * * ?")
-    private void morningTask() {
-        log.info("定时获取开元叫早订单-------------start-----");
-        List<KyBackOrder> orderList = kyRequest.morningOrder();
-        for(KyBackOrder kyBackOrder : orderList){
-            CallTask callTask = callTaskService.getTaskByRequestId(kyBackOrder.getId() + "");
-            if(null == callTask){
-                //创建执行任务 TODO 商家id 和 外呼id
-                CallTaskVo callTaskVo = new CallTaskVo();
-                callTaskVo.setMerchantId(30);//商家id
-                callTaskVo.setCallTypeId(1002l);//外呼实例id
-                callTaskVo.setPhoneNum(Integer.parseInt(kyBackOrder.getRmno()));//被叫号码
-                callTaskVo.setRequestId(kyBackOrder.getId()+"");//请求id
-                callTaskVo.setExcuteTime(DateUtil.parseToDateTime(kyBackOrder.getMorningCallTime()));
-                callTaskVo.setRootNum(kyBackOrder.getRmno());//房间号
-                try {
-                    smartCallService.creatCallTask(callTaskVo);
-                } catch (BaseError baseError) {
-                    baseError.printStackTrace();
-                }
-            }
-        }
-        log.info("定时获取开元叫早订单-------------end-----");
-    }
-
 
     /**
      * 开元没有返回结果的任务，重新创建任务

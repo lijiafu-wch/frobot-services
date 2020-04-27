@@ -1,9 +1,10 @@
-package f.s.fadminrobot.remote;
+package f.s.fadminrobot.third;
 
 import cn.hutool.core.util.HexUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
 import f.s.fadminrobot.service.CallKyOrderService;
+import f.s.fadminrobot.service.CallThirdConfigService;
 import f.s.fadminrobot.vo.ext.KyBackOrder;
 import f.s.fadminrobot.vo.ext.KyResponse;
 import f.s.frobot.model.CallKyOrder;
@@ -39,35 +40,24 @@ public class KyRequest {
     private RestTemplate restTemplate;
     @Autowired
     private CallKyOrderService callKyOrderService;
-
-    public final static Map<String,String> vipTimeMap = new HashMap<>();
-    public final static Map<String,String> vipNameMap = new HashMap<>();
-
-    static{
-        vipTimeMap.put("A","14:00");
-        vipTimeMap.put("BE","14:00");
-        vipTimeMap.put("BS","15:00");
-        vipTimeMap.put("BG","16:00");
-        vipTimeMap.put("BP","17:00");
-
-        vipNameMap.put("A","普通用户");
-        vipNameMap.put("BE","商祺普卡");
-        vipNameMap.put("BS","商祺银卡");
-        vipNameMap.put("BG","商祺金卡");
-        vipNameMap.put("BP","商祺白金卡");
-    }
+    @Autowired
+    private CallThirdConfigService callThirdConfig;
     /**
      * 催单接口
      * @author lijiafu
      * @date 2020/4/1 22:28
      */
-    public List<KyBackOrder>    backOrder(){
+    public List<KyBackOrder> backOrder(){
         List<KyBackOrder> orderList = new ArrayList<>();
         Map<String,KyBackOrder> kyBackOrderMap = new HashMap<>();
+        Integer merchantId = 30;//商户id
         try {
-            String url ="http://ets.shands.cn/lvYun/checkOrderMessage.htm";
-            String publicKey="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFcGE6G/+ejaiXRyNdw35SA16JP7Tl4YZW65chrOr3zna/Wlsj5+5EySXRC/w1Z5rnHzoxMupKsI4NqA+28GgHoZ4lG679cEkqDI5kPd3pDLnS4q+ZqboCDNv1UyYnTKaCrYiGssyXpl2kA9z9fRzM0pPrjdIncEMdjHzHGUKVVwIDAQAB";
-            String hotelCode = "KYHAZH";//正式
+            //崔退url
+            String url =callThirdConfig.getValue(merchantId,"ky_request","backOrderUrl");
+            //公钥
+            String publicKey=callThirdConfig.getValue(merchantId,"ky_request","publicKey");
+            //酒店code
+            String hotelCode = callThirdConfig.getValue(merchantId,"ky_request","hotelCode");
             RSA operaRsa = new RSA(null,publicKey);
             String encrypt = HexUtil.encodeHexStr(operaRsa.encrypt("{\"hotelCode\":\""+hotelCode+"\"}", KeyType.PublicKey));
             Map<String, String> map = new HashMap<>();
@@ -98,49 +88,13 @@ public class KyRequest {
                 saveKyOrder(orderList);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("开元崔退订单保存异常：{}",e.getMessage());
         }
         return orderList;
     }
 
 
-    /**
-     * 早叫接口
-     * @author lijiafu
-     * @date 2020/4/1 22:28
-     */
-    public List<KyBackOrder> morningOrder() {
-        try {
-            String url ="http://test3.shands.cn/lvYun/morningCall.htm";
-            String publicKey="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFcGE6G/+ejaiXRyNdw35SA16JP7Tl4YZW65chrOr3zna/Wlsj5+5EySXRC/w1Z5rnHzoxMupKsI4NqA+28GgHoZ4lG679cEkqDI5kPd3pDLnS4q+ZqboCDNv1UyYnTKaCrYiGssyXpl2kA9z9fRzM0pPrjdIncEMdjHzHGUKVVwIDAQAB";
-            String hotelCode = "KYHAZH";//正式
-            RSA operaRsa = new RSA(null,publicKey);
-            String encrypt = HexUtil.encodeHexStr(operaRsa.encrypt("{\"hotelCode\":\""+"KYGYBSD"+"\"}", KeyType.PublicKey));
-            Map<String, String> map = new HashMap<>();
-            map.put("encrypt",encrypt);
-            url = url+"?encrypt="+encrypt;
-            ResponseEntity<String> entity = restTemplate.getForEntity(url, String .class);
-            String  body  =entity.getBody();
-            KyResponse kyResponse = GsonUtil.getGsonInstance().fromJson(body,KyResponse.class);
-            List<KyBackOrder> kyBackOrders = GsonUtil.getGsonInstance().fromJson(kyResponse.getMessage(), new TypeToken<List<KyBackOrder>>() {}.getType());
-            List<KyBackOrder> orderList = new ArrayList<>();
-            for(KyBackOrder kyBackOrder : kyBackOrders){
-                //判断早叫时间是否为今天
-                String depDateStr = kyBackOrder.getMorningCallTime();
-                String nowDateStr = DateUtil.getDay();
-                if(depDateStr.equals(nowDateStr)){
-                    orderList.add(kyBackOrder);
-                }
-            }
-
-            //保存开元数据
-            saveKyOrder(orderList);
-            return orderList;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     /**
      * 通知接口
@@ -148,25 +102,29 @@ public class KyRequest {
      * @date 2020/4/1 22:28
      */
     public String kyNotify(String traderNo,String result) throws  Exception{
-            String url ="http://ets.shands.cn/lvYun/appendRemarks.htm";//确认结果
-            String publicKey="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFcGE6G/+ejaiXRyNdw35SA16JP7Tl4YZW65chrOr3zna/Wlsj5+5EySXRC/w1Z5rnHzoxMupKsI4NqA+28GgHoZ4lG679cEkqDI5kPd3pDLnS4q+ZqboCDNv1UyYnTKaCrYiGssyXpl2kA9z9fRzM0pPrjdIncEMdjHzHGUKVVwIDAQAB";
-            RSA operaRsa = new RSA(null,publicKey);
-            String hotelCode = "KYHAZH";
-            String tradeNo = traderNo;
-            String remark = result;
+        Integer merchantId = 30;//商户id
+        //通知结果url
+        String url =callThirdConfig.getValue(merchantId,"ky_request","notifyUrl");
+        //公钥
+        String publicKey=callThirdConfig.getValue(merchantId,"ky_request","publicKey");
+        //酒店code
+        String hotelCode = callThirdConfig.getValue(merchantId,"ky_request","hotelCode");
+        RSA operaRsa = new RSA(null,publicKey);
+        String tradeNo = traderNo;
+        String remark = result;
 
-            String encrypt = HexUtil.encodeHexStr(operaRsa.encrypt("{\"hotelCode\":\""+hotelCode+"\",\"tradeNo\":\""+tradeNo+"\",\"remark\":\""+remark+"\"}",KeyType.PublicKey));
-            Map<String, String> map = new HashMap<>();
-            map.put("encrypt",encrypt);
-            url = url+"?encrypt="+encrypt;
-            ResponseEntity<String> entity = restTemplate.getForEntity(url, String .class);
-            String  body  =entity.getBody();
-            if(StringUtils.isNotBlank(body)){
-                if(body.length() > 128){
-                    body = body.substring(1,128);
-                }
+        String encrypt = HexUtil.encodeHexStr(operaRsa.encrypt("{\"hotelCode\":\""+hotelCode+"\",\"tradeNo\":\""+tradeNo+"\",\"remark\":\""+remark+"\"}",KeyType.PublicKey));
+        Map<String, String> map = new HashMap<>();
+        map.put("encrypt",encrypt);
+        url = url+"?encrypt="+encrypt;
+        ResponseEntity<String> entity = restTemplate.getForEntity(url, String .class);
+        String  body  =entity.getBody();
+        if(StringUtils.isNotBlank(body)){
+            if(body.length() > 128){
+                body = body.substring(1,128);
             }
-            log.info("订单号：{},开元通知结果 {}",tradeNo,body);
+        }
+        log.info("订单号：{},开元通知结果 {}",tradeNo,body);
         return body;
     }
 

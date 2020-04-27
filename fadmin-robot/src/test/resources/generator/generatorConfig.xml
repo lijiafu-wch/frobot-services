@@ -3,6 +3,13 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
     <context id="context1">
+
+        <!-- 格式化XML代码 -->
+        <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
+
+        <!-- beginningDelimiter和endingDelimiter：指明数据库的用于标记数据库对象名的符号，比如ORACLE就是双引号，MYSQL默认是`反引号； -->
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
         <!-- 查询单条数据插件 -->
         <plugin type="com.itfsw.mybatis.generator.plugins.SelectOneByExamplePlugin" />
         <!-- 数据Model链式构建插件 -->
@@ -51,7 +58,7 @@
         <!--<table schema="robot" delimitIdentifiers="true" tableName="call_instance" enableDeleteByExample="false">-->
             <!--<property name="useActualColumnNames" value="false"/>-->
         <!--</table>-->
-        <table schema="robot" delimitIdentifiers="true" tableName="call_instance" enableDeleteByExample="false">
+        <table schema="robot" delimitIdentifiers="true" tableName="call_third_config" enableDeleteByExample="false">
             <property name="useActualColumnNames" value="false"/>
         </table>
 
