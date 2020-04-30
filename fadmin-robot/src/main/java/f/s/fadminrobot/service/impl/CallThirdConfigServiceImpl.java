@@ -44,10 +44,10 @@ public class CallThirdConfigServiceImpl implements CallThirdConfigService {
      * @date 2020/4/27 17:55
      */
     //@Cacheable(key="RedisConstant.THIRD_KY_HOTLE+#baseUserId+':'+#name")
+    @Override
     public List<CallThirdConfig> getValueList(Integer baseUserId,String name){
         CallThirdConfigExample example = new CallThirdConfigExample();
-        example.createCriteria().andBaseUserIdEqualTo(baseUserId);
-        example.createCriteria().andNameEqualTo(name);
+        example.createCriteria().andBaseUserIdEqualTo(baseUserId).andNameEqualTo(name);
         List<CallThirdConfig> list = callThirdConfigMapper.selectByExample(example);
         return list;
     }
